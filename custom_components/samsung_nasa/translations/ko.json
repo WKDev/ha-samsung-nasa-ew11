@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "삼성 에어컨 (EW11 NASA)",
+        "description": "EW11(RS485↔TCP 브리지)의 호스트와 포트를 입력하세요.",
+        "data": {
+          "host": "호스트",
+          "port": "포트"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "EW11에 연결하지 못했습니다."
+    },
+    "abort": {
+      "already_configured": "이미 설정된 EW11입니다."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "outdoor_temp": { "name": "실외 온도" },
+      "instantaneous_power": { "name": "순시 전력" },
+      "cumulative_energy": { "name": "누적 에너지" },
+      "error_code": { "name": "에러 코드" }
+    }
+  }
+}

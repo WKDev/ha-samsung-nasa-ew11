@@ -1,0 +1,12 @@
+{
+  "domain": "samsung_nasa",
+  "name": "Samsung A/C (NASA over EW11)",
+  "codeowners": ["@WKDev"],
+  "config_flow": true,
+  "documentation": "https://github.com/WKDev/ha-samsung-nasa-ew11",
+  "dependencies": [],
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/WKDev/ha-samsung-nasa-ew11/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

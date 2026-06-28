@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Samsung A/C (NASA over EW11)",
+        "description": "Enter the EW11 (RS485 to TCP bridge) host and port.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the EW11."
+    },
+    "abort": {
+      "already_configured": "This EW11 is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "outdoor_temp": { "name": "Outdoor temperature" },
+      "instantaneous_power": { "name": "Power" },
+      "cumulative_energy": { "name": "Energy" },
+      "error_code": { "name": "Error code" }
+    }
+  }
+}
