@@ -125,13 +125,23 @@ class SamsungNasaClient:
         await self._writer.drain()
 
     async def send_request(self, da: nasa.Address, messages: list[nasa.MessageSet]) -> None:
-        """Send a Request packet to *da* and register it for retry until acked."""
+        """Send a Request packet to *da* (one transmission; retry only if enabled)."""
         if not messages:
             return
         packet = nasa.Packet.create_partial(da, nasa.DataType.Request, _next_packet_number())
         packet.messages.extend(messages)
         raw = packet.encode()
-        self._pending[da.to_string()] = _Pending(da.to_string(), raw)
+        _LOGGER.debug(
+            "TX command -> %s pn=%d (%d msg): %s",
+            da.to_string(),
+            packet.command.packet_number,
+            len(messages),
+            raw.hex(),
+        )
+        # Only track for retransmission when retries are enabled; otherwise the
+        # single write above is the whole command (avoids extra beeps).
+        if SEND_MAX_RETRIES > 0:
+            self._pending[da.to_string()] = _Pending(da.to_string(), raw)
         await self._write(raw)
 
 
