@@ -32,6 +32,9 @@
 - [ ] manifest version, iot_class=local_push
 
 ## 6. 검증
-- [ ] 코덱 pytest 통과
+- [x] 코덱 pytest 통과 (9/9)
+- [x] 전체 py_compile + JSON 검증 통과
 - [ ] (현장) EW11 연결 → 엔티티 생성 확인
 - [ ] (현장) 제어 명령 1회 → 실내기 반응 + 재전송 멈춤 확인
+
+> 1~5번 구현 완료. 남은 건 실제 EW11/에어컨 현장 검증.
