@@ -136,6 +136,29 @@ def test_crc16_known_vector():
     assert crc16(bytes(10), 0, 10) == 0
 
 
+def test_real_outdoor_packet():
+    # Captured live from a Samsung outdoor unit via EW11 at 9600/8E1 (10.00.00).
+    # Locks real-world framing/CRC/decode against regression.
+    raw = bytes.fromhex(
+        "32003c100000b000ffc014660c80c00080c2008204010a820a0115821700008218"
+        "010a8233000082350000823600008237000082380000823f00c86bee34"
+    )
+    buf = bytearray(raw)
+    decoded = feed(buf)
+    assert len(buf) == 0
+    assert len(decoded) == 1
+    pkt = decoded[0]
+    assert pkt.sa.to_string() == "10.00.00"
+    assert pkt.command.data_type == DataType.Notification
+    assert len(pkt.messages) == 12
+    by_num = {m.message_number: m for m in pkt.messages}
+    # outdoor air temperature 0x8204 = 0x010a = 266 -> 26.6 C
+    assert by_num[0x8204].value == 266
+    assert nasa._s16(by_num[0x8204].value) / 10.0 == 26.6
+    # error code 0x8235 = 0
+    assert by_num[0x8235].value == 0
+
+
 if __name__ == "__main__":
     failed = 0
     for name, fn in sorted(globals().items()):
