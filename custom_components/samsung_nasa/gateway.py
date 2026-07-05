@@ -76,6 +76,7 @@ class SamsungNasaGateway:
         for message in packet.messages:
             self._apply_message(device, message)
         async_dispatcher_send(self._hass, f"{SIGNAL_STATE_UPDATED}_{source}")
+        async_dispatcher_send(self._hass, SIGNAL_STATE_UPDATED)
 
     def _ensure_device(self, address: str, klass: int) -> DeviceState:
         device = self.devices.get(address)
@@ -126,3 +127,10 @@ class SamsungNasaGateway:
     @staticmethod
     def is_outdoor(klass: int) -> bool:
         return klass == KLASS_OUTDOOR
+
+    def any_indoor_powered_on(self) -> bool:
+        """Return whether any known indoor unit is currently powered on."""
+        return any(
+            self.is_indoor(device.klass) and device.power is True
+            for device in self.devices.values()
+        )

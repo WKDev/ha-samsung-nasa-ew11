@@ -92,6 +92,7 @@ class SamsungSensor(SensorEntity):
     def __init__(
         self, gateway: SamsungNasaGateway, device: DeviceState, description: SamsungSensorDescription
     ) -> None:
+        self._gateway = gateway
         self._device = device
         self.entity_description = description
         self._attr_unique_id = f"{DOMAIN}_{device.address}_{description.key}"
@@ -110,7 +111,24 @@ class SamsungSensor(SensorEntity):
                 self.async_write_ha_state,
             )
         )
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_STATE_UPDATED,
+                self.async_write_ha_state,
+            )
+        )
 
     @property
     def native_value(self):
         return self.entity_description.value_fn(self._device)
+
+    @property
+    def available(self) -> bool:
+        if (
+            self.entity_description.key == "instantaneous_power"
+            and self._device.instantaneous_power == 0
+            and self._gateway.any_indoor_powered_on()
+        ):
+            return False
+        return True
